@@ -10,6 +10,9 @@ from time import sleep
 # 模型服务配置
 MODEL_NAME = "qwen2.5-vl-72b-awq"
 LOCAL_VLLM_ENDPOINT = 'http://localhost:9076/v1/chat/completions'
+MODEL_NAME = 'turing'
+api_key = 'e6050884-c961-4263-89fe-9e1fcbfe1df1'
+LOCAL_VLLM_ENDPOINT = 'http://10.1.0.9:8000/v1'
 IMAGE_PATH = "2.jpg"
 
 # Prompt 配置（请将 prompt2 的 ... 替换成原始内容）
@@ -98,8 +101,12 @@ def call_vllm(image_path, prompt):
         "temperature": 0.0,
         "top_p": 0.1
     }
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
 
-    response = requests.post(LOCAL_VLLM_ENDPOINT, json=payload)
+    response = requests.post(LOCAL_VLLM_ENDPOINT, json=payload, headers=headers)
     response.raise_for_status()
 
     content = response.json()["choices"][0]["message"]["content"]
